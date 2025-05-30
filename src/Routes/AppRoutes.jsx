@@ -7,6 +7,7 @@ import { ProtectedRoute } from './ProtectedRoute';
 import About from '../pages/About'
 import Contact from '../pages/Contact'
 import Form from '../copoments/Form'
+import Profile from '../pages/Profile';
 const AppRouter = () => {
     return (
         <>
@@ -21,6 +22,7 @@ const AppRouter = () => {
                     <Route path='/about' element={<ProtectedRoute><About /></ProtectedRoute>} />
                     <Route path='/contact' element={<ProtectedRoute><Contact /></ProtectedRoute>} />
                     <Route path='/form' element={<ProtectedRoute><Form /></ProtectedRoute>} />
+                    <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 </Routes>
             </BrowserRouter>
         </>

@@ -1,6 +1,8 @@
 import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const ProtectedRoute = ({ children }) => {
+    const navigate = useNavigate();
     const token = localStorage.getItem("token");
-    return token ? children : <Navigate to="/" replace />;
+    return token ? children : navigate('/');
 };

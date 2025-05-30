@@ -1,6 +1,15 @@
 import React from 'react'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 const Nacbar = () => {
+
+    const navigate = useNavigate();
+
+    const handleLogut = async () => {
+        localStorage.clear('token');
+        navigate('/');
+    }
+
     return (
         <div>
             <nav className="navbar">
@@ -13,7 +22,7 @@ const Nacbar = () => {
                         <li><Link to="/contact">Contact</Link></li>
                         <li><Link to="/profile">Profile</Link></li>
                         <li><Link to="/form">Student Form </Link></li>
-                        <li><button className="logout-button">Logout</button></li>
+                        <li><button className="logout-button" onClick={handleLogut}>Logout</button></li>
                     </ul>
                 </div>
             </nav>
