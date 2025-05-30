@@ -3,8 +3,8 @@ import '../Style/footer.css'
 const Footer = () => {
     return (
         <>
-            <footer className='sticky-footer'>
-                © 2025 Copyright: Scholarship Portal
+            <footer className="footer">
+                <p>© 2025 EduAid | Google India Hackathon</p>
             </footer>
         </>
     )
