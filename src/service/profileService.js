@@ -11,12 +11,14 @@ export const getUserProfile = async () => {
     return data;
 }
 
-export const createProfile = async () => {
+export const createProfile = async (data) => {
 
-    const data = {
+    console.log(data)
 
+    const hel = {
+        person: data
     }
 
-    const res = await axios.post(`${baseUrl}`, data, headers);
+    const res = await axios.post(`${baseUrl}`, hel, headers);
     return res;
 }
