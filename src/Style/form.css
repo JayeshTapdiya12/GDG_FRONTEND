@@ -1,149 +1,74 @@
 /* StudentForm.css */
 
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
-
-body {
-  font-family: "Poppins", sans-serif;
-  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-form {
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  max-width: 1100px;
-  width: 90%;
-  padding: 40px 50px;
-  animation: fadeInUp 1s ease forwards;
-  box-sizing: border-box;
-}
-
-h2 {
-  color: #4a148c;
-  margin-bottom: 24px;
-  font-weight: 700;
-  text-align: center;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  animation: slideInLeft 1s ease forwards;
-}
-
-.form-section {
-  background: #f3e5f5;
-  border-radius: 12px;
-  padding: 25px 30px;
-  margin-bottom: 35px;
-  box-shadow: 0 10px 25px rgba(74, 20, 140, 0.1);
-  transition: transform 0.3s ease;
-}
-
-.form-section:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(74, 20, 140, 0.2);
-}
-
-label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #6a1b9a;
-  letter-spacing: 0.03em;
-  transition: color 0.3s ease;
-}
-
 input[type="text"],
 input[type="email"],
 input[type="date"],
-input[type="tel"],
 input[type="number"],
-select {
+input[type="tel"],
+select,
+textarea {
   width: 100%;
-  max-width: 100%;
-  padding: 14px 18px;
-  border: 2px solid #ba68c8;
-  border-radius: 10px;
-  font-size: 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  padding: 10px;
+  margin-top: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
   box-sizing: border-box;
-  color: #4a148c;
+  font-size: 15px;
+  color: #1a1a1a;
+  background-color: #ffffff;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="date"]:focus,
-input[type="tel"]:focus,
-input[type="number"]:focus,
-select:focus {
-  border-color: #7b1fa2;
-  box-shadow: 0 0 8px #7b1fa2;
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #0070f3;
+  box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.2);
   outline: none;
 }
 
-.checkbox-group {
-  display: flex;
-  gap: 20px;
-  margin-top: 10px;
-  color: #6a1b9a;
+form {
+  background-color: #8ac7f5;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 1100px;
+  margin: 30px auto;
+}
+
+label {
   font-weight: 600;
-  flex-wrap: wrap;
-  max-width: 400px;
+  margin-bottom: 5px;
+  display: block;
+  color: #333;
+}
+
+.section {
+  background-color: #e3f2fd;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  border-left: 5px solid #42a5f5;
+}
+
+h2 {
+  color: #1976d2;
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 button {
-  background: linear-gradient(45deg, #8e24aa, #d81b60);
-  color: white;
-  padding: 14px 0;
-  font-size: 1.1rem;
+  background-color: #1976d2;
+  color: #fff;
+  padding: 12px 30px;
   border: none;
-  border-radius: 15px;
+  border-radius: 8px;
+  font-size: 1rem;
   cursor: pointer;
-  font-weight: 700;
-  width: 100%;
-  max-width: 100%;
-  transition: background 0.4s ease, transform 0.3s ease;
-  box-shadow: 0 6px 15px rgba(216, 27, 96, 0.5);
   margin-top: 20px;
-  box-sizing: border-box;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background: linear-gradient(45deg, #d81b60, #8e24aa);
-  box-shadow: 0 8px 20px rgba(216, 27, 96, 0.7);
-  transform: scale(1.05);
-}
-
-/* Animations */
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInLeft {
-  0% {
-    opacity: 0;
-    transform: translateX(-40px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  form {
-    padding: 30px 20px;
-  }
+  background-color: #1565c0;
 }
