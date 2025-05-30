@@ -7,67 +7,63 @@ import Nacbar from './Nacbar';
 
 import { createProfile } from '../service/profileService'
 
-const statesOfIndia = [
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chhattisgarh",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
+const statesIndia = [
+    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat",
+    "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh",
+    "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
+    "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh",
+    "Uttarakhand", "West Bengal", "Delhi", "Jammu and Kashmir", "Ladakh"
 ];
 
-const occupationOptions = [
+const occupationsList = [
     "Farmer",
     "Teacher",
     "Engineer",
-    "Doctor",
     "Business",
-    "Government Service",
-    "Self-Employed",
-    "Unemployed",
-    "Other",
+    "Government Employee",
+    "Self Employed",
+    "Student",
+    "Other"
 ];
 
-const incomeOptions = [
-    { value: "", label: "Select Income" },
-    { value: "na", label: "N/A" },
-    { value: "0-2", label: "0 to 2 Lakhs" },
-    { value: "2.1-5", label: "2.1 to 5 Lakhs" },
-    { value: "5.1-9", label: "5.1 to 9 Lakhs" },
-    { value: "above-9", label: "Above 9 Lakhs" },
+const incomeRanges = [
+    "NA",
+    "0 to 2 Lakhs",
+    "2.1 to 5 Lakhs",
+    "5.1 to 9 Lakhs",
+    "Above 9 Lakhs"
 ];
 
-const educationStatusOptions = [
-    { value: "", label: "Select Status" },
-    { value: "completed", label: "Completed" },
-    { value: "not_done", label: "Not Done" },
-    { value: "na", label: "N/A" },
+const yesNoOptions = [
+    { label: "Yes", value: true },
+    { label: "No", value: false },
 ];
 
+const disabilityOptions = [
+    "None",
+    "Visual Impairment",
+    "Hearing Impairment",
+    "Locomotor Disability",
+    "Mental Disability",
+    "Other"
+];
+
+const categoryOptions = [
+    "General",
+    "OBC",
+    "SC",
+    "ST",
+    "Other"
+];
+
+const ugPgStatusOptions = [
+    "Not Done",
+    "Pursuing",
+    "Completed"
+];
 const Form = () => {
     const [formData, setFormData] = useState({
+
         fname: "",
         lname: "",
         email: "",
@@ -82,8 +78,8 @@ const Form = () => {
         permanentaddress: "",
         city: "",
         state: "",
-        country: "India",
-        nationality: "Indian",
+        country: "",
+        nationality: "",
         adharcard: "",
         sportsQuota: null,
         serviceQuota: null,
@@ -92,39 +88,39 @@ const Form = () => {
             fname: "",
             lname: "",
             occupation: "",
-            otherOccupation: "",
             income: "",
             phone: "",
-            email: "",
+            email: ""
         },
         mother: {
             fname: "",
             lname: "",
             occupation: "",
-            otherOccupation: "",
             income: "",
             phone: "",
-            email: "",
+            email: ""
         },
         education: {
             tenth: { schoolName: "", board: "", percentage: "" },
             twelfth: { schoolName: "", boardName: "", percentage: "" },
-            underGrad: { status: "", schoolName: "", percentage: "" },
-            postGrad: { status: "", schoolName: "", percentage: "" },
-        },
-        sameAddress: false,
+            underGrad: { schoolName: "", percentage: "" },
+            postGrad: { schoolName: "", percentage: "" }
+        }
     });
 
-    // Handle nested changes, including multiple levels (like father.occupation)
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
 
         if (name === "sameAddress") {
-            setFormData((prev) => ({
-                ...prev,
-                sameAddress: checked,
-                permanentaddress: checked ? prev.currentaddress : "",
-            }));
+            // Checkbox to copy currentaddress -> permanentaddress
+            setFormData((prev) => {
+                const newPermanent = checked ? prev.currentaddress : "";
+                return {
+                    ...prev,
+                    sameAddress: checked,
+                    permanentaddress: newPermanent,
+                };
+            });
             return;
         }
 
@@ -152,572 +148,655 @@ const Form = () => {
                     },
                 }));
             }
-        } else {
-            setFormData((prev) => ({ ...prev, [name]: value }));
+            return;
         }
-    };
 
-    // Handle radio button changes
-    const handleRadioChange = (name, value) => {
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    };
+        // Handle boolean fields like sportsQuota, serviceQuota which can come as string "true"/"false"
+        if (name === "sportsQuota" || name === "serviceQuota") {
+            setFormData((prev) => ({
+                ...prev,
+                [name]: value === "true" ? true : value === "false" ? false : null,
+            }));
+            return;
+        }
 
-    // Copy current address into permanent address on checkbox toggle
-    const handleSameAddressChange = (e) => {
-        const checked = e.target.checked;
+        // Normal fields
         setFormData((prev) => ({
             ...prev,
-            sameAddress: checked,
-            permanentaddress: checked ? prev.currentaddress : "",
+            [name]: type === "checkbox" ? checked : value,
         }));
     };
 
-    // Occupation handling with "Other" option
-    const handleOccupationChange = (e, parent) => {
-        const val = e.target.value;
-        setFormData((prev) => ({
-            ...prev,
-            [parent]: {
-                ...prev[parent],
-                occupation: val,
-                otherOccupation: val === "Other" ? prev[parent].otherOccupation : "",
-            },
-        }));
-    };
-
-    const handleOtherOccupationChange = (e, parent) => {
-        const val = e.target.value;
+    // Handle father and mother occupation "Other" input conditionally
+    const handleOccupationChange = (parent, e) => {
+        const { value } = e.target;
         setFormData((prev) => ({
             ...prev,
             [parent]: {
                 ...prev[parent],
-                otherOccupation: val,
+                occupation: value,
+                // Clear occupationOther if not "Other"
+                occupationOther: value === "Other" ? prev[parent].occupationOther : "",
             },
         }));
     };
+
+    // Validation example for Aadhaar
+    const isAadhaarValid = (aadhaar) => /^\d{12}$/.test(aadhaar);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Form Data Submitted: ", formData);
-        // Submit logic here
+
+        if (!isAadhaarValid(formData.adharcard)) {
+            alert("Aadhaar number must be exactly 12 digits.");
+            return;
+        }
+
+        // Prepare payload for backend
+        // Occupation fallback: if occupation is "Other", send occupationOther
+        const prepareOccupation = (parentData) =>
+            parentData.occupation === "Other"
+                ? parentData.occupationOther || "Other"
+                : parentData.occupation;
+
+        const payload = {
+            profileBy: "self", // or some dynamic value
+            person: {
+                ...formData,
+                sportsQuota: !!formData.sportsQuota,
+                serviceQuota: !!formData.serviceQuota,
+                father: {
+                    ...formData.father,
+                    occupation: prepareOccupation(formData.father),
+                },
+                mother: {
+                    ...formData.mother,
+                    occupation: prepareOccupation(formData.mother),
+                },
+            },
+        };
+
+        // Remove sameAddress from payload as it's UI only
+        delete payload.person.sameAddress;
+
         const res = await createProfile(formData);
         console.log(res);
     };
+
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     // console.log("Form Data Submitted: ", formData);
+    //     // Submit logic here
+    //     console.log(formData)
+    //     const res = await createProfile(formData);
+    //     console.log(res);
+    // };
+
     return (
         <>
             <Nacbar />
-            {/* <div className="form-container"> */}
-            <form onSubmit={handleSubmit} className="student-form">
-                <h2>Student Registration Form</h2>
+            <form onSubmit={handleSubmit} style={{ maxWidth: 900, margin: "auto", padding: 20, backgroundColor: "#f0f8ff", borderRadius: 15, boxShadow: "0 4px 12px rgba(0,0,0,0.15)" }}>
+                <h2 style={{ textAlign: "center", color: "#4a148c", marginBottom: 20 }}>Student Profile Form</h2>
 
-                {/* Basic Info */}
-                <label>First Name *</label>
-                <input
-                    type="text"
-                    name="fname"
-                    value={formData.fname}
-                    onChange={handleChange}
-                    required
-                    placeholder="First Name"
-                />
-
-                <label>Last Name</label>
-                <input
-                    type="text"
-                    name="lname"
-                    value={formData.lname}
-                    onChange={handleChange}
-                    placeholder="Last Name"
-                />
-
-                <label>Email *</label>
-                <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    placeholder="Email"
-                />
-
-                <label>Date of Birth *</label>
-                <input
-                    type="date"
-                    name="dob"
-                    value={formData.dob}
-                    onChange={handleChange}
-                    required
-                />
-
-                <label>Gender *</label>
-                <select
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleChange}
-                    required
-                >
-                    <option value="">Select Gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                </select>
-
-                <label>Disability</label>
-                <select
-                    name="disability"
-                    value={formData.disability}
-                    onChange={handleChange}
-                >
-                    <option value="">Select Disability</option>
-                    <option value="none">None</option>
-                    <option value="visual">Visual Impairment</option>
-                    <option value="hearing">Hearing Impairment</option>
-                    <option value="physical">Physical Disability</option>
-                    <option value="other">Other</option>
-                </select>
-
-                <label>Category</label>
-                <select
-                    name="category"
-                    value={formData.category}
-                    onChange={handleChange}
-                >
-                    <option value="">Select Category</option>
-                    <option value="general">General</option>
-                    <option value="obc">OBC</option>
-                    <option value="sc">SC</option>
-                    <option value="st">ST</option>
-                    <option value="ews">EWS</option>
-                </select>
-
-                <label>Current Address *</label>
-                <textarea
-                    name="currentaddress"
-                    value={formData.currentaddress}
-                    onChange={handleChange}
-                    required
-                    placeholder="Current Address"
-                    rows={3}
-                ></textarea>
-
-                <label>
+                {/* Basic info */}
+                <div>
+                    <label>First Name *</label>
                     <input
-                        type="checkbox"
-                        name="sameAddress"
-                        checked={formData.sameAddress}
-                        onChange={handleSameAddressChange}
-                    />{" "}
-                    Permanent address is same as current
-                </label>
+                        name="fname"
+                        value={formData.fname}
+                        onChange={handleChange}
+                        required
+                        placeholder="First Name"
+                    />
+                </div>
 
-                <label>Permanent Address *</label>
-                <textarea
-                    name="permanentaddress"
-                    value={formData.permanentaddress}
-                    onChange={handleChange}
-                    required
-                    placeholder="Permanent Address"
-                    rows={3}
-                    disabled={formData.sameAddress}
-                ></textarea>
+                <div>
+                    <label>Last Name *</label>
+                    <input
+                        name="lname"
+                        value={formData.lname}
+                        onChange={handleChange}
+                        required
+                        placeholder="Last Name"
+                    />
+                </div>
 
-                <label>City *</label>
-                <input
-                    type="text"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleChange}
-                    required
-                    placeholder="City"
-                />
+                <div>
+                    <label>Email *</label>
+                    <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        placeholder="Email"
+                    />
+                </div>
 
-                <label>State *</label>
-                <select
-                    name="state"
-                    value={formData.state}
-                    onChange={handleChange}
-                    required
-                >
-                    <option value="">Select State</option>
-                    {statesOfIndia.map((state) => (
-                        <option key={state} value={state}>
-                            {state}
-                        </option>
-                    ))}
-                </select>
+                <div>
+                    <label>Date of Birth *</label>
+                    <input
+                        type="date"
+                        name="dob"
+                        value={formData.dob}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
 
-                <label>Country *</label>
-                <input
-                    type="text"
-                    name="country"
-                    value={formData.country}
-                    onChange={handleChange}
-                    required
-                    placeholder="Country"
-                    disabled
-                />
+                <div>
+                    <label>Gender *</label>
+                    <select name="gender" value={formData.gender} onChange={handleChange} required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
 
-                <label>Nationality *</label>
-                <input
-                    type="text"
-                    name="nationality"
-                    value={formData.nationality}
-                    onChange={handleChange}
-                    required
-                    placeholder="Nationality"
-                    disabled
-                />
+                <div>
+                    <label>Phone *</label>
+                    <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        required
+                        placeholder="Phone Number"
+                        maxLength={10}
+                    />
+                </div>
 
-                <label>Aadhar Card Number</label>
-                <input
-                    type="text"
-                    name="adharcard"
-                    value={formData.adharcard}
-                    onChange={handleChange}
-                    placeholder="Aadhar Card Number"
-                />
+                <div>
+                    <label>Disability *</label>
+                    <select name="disability" value={formData.disability} onChange={handleChange} required>
+                        <option value="">Select Disability</option>
+                        {disabilityOptions.map((opt) => (
+                            <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                    </select>
+                </div>
 
-                {/* Quotas */}
-                <label>Sports Quota</label>
-                <div className="radio-group">
+                <div>
+                    <label>Religion *</label>
+                    <input name="religion" value={formData.religion} onChange={handleChange} required placeholder="Religion" />
+                </div>
+
+                <div>
+                    <label>Language *</label>
+                    <input name="language" value={formData.language} onChange={handleChange} required placeholder="Language" />
+                </div>
+
+                <div>
+                    <label>Category *</label>
+                    <select name="category" value={formData.category} onChange={handleChange} required>
+                        <option value="">Select Category</option>
+                        {categoryOptions.map((opt) => (
+                            <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* Address */}
+                <div>
+                    <label>Current Address *</label>
+                    <textarea
+                        name="currentaddress"
+                        value={formData.currentaddress}
+                        onChange={handleChange}
+                        required
+                        placeholder="Current Address"
+                    />
+                </div>
+
+                <div>
                     <label>
                         <input
-                            type="radio"
-                            name="sportsQuota"
-                            value="yes"
-                            checked={formData.sportsQuota === "yes"}
-                            onChange={() => handleRadioChange("sportsQuota", "yes")}
-                        />
-                        Yes
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            name="sportsQuota"
-                            value="no"
-                            checked={formData.sportsQuota === "no"}
-                            onChange={() => handleRadioChange("sportsQuota", "no")}
-                        />
-                        No
+                            type="checkbox"
+                            name="sameAddress"
+                            checked={formData.sameAddress}
+                            onChange={handleChange}
+                        /> Permanent Address same as Current Address
                     </label>
                 </div>
 
-                <label>Service Quota</label>
-                <div className="radio-group">
-                    <label>
-                        <input
-                            type="radio"
-                            name="serviceQuota"
-                            value="yes"
-                            checked={formData.serviceQuota === "yes"}
-                            onChange={() => handleRadioChange("serviceQuota", "yes")}
-                        />
-                        Yes
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            name="serviceQuota"
-                            value="no"
-                            checked={formData.serviceQuota === "no"}
-                            onChange={() => handleRadioChange("serviceQuota", "no")}
-                        />
-                        No
-                    </label>
+                <div>
+                    <label>Permanent Address *</label>
+                    <textarea
+                        name="permanentaddress"
+                        value={formData.permanentaddress}
+                        onChange={handleChange}
+                        required
+                        placeholder="Permanent Address"
+                        disabled={formData.sameAddress}
+                    />
                 </div>
 
-                <label>Family Income *</label>
-                <select
-                    name="familyincome"
-                    value={formData.familyincome}
-                    onChange={handleChange}
-                    required
-                >
-                    {incomeOptions.map(({ value, label }) => (
-                        <option key={value} value={value}>
-                            {label}
-                        </option>
-                    ))}
-                </select>
+                <div>
+                    <label>City *</label>
+                    <input name="city" value={formData.city} onChange={handleChange} required placeholder="City" />
+                </div>
 
-                {/* Father's Details */}
-                <h3>Father's Details</h3>
-                <label>First Name *</label>
-                <input
-                    type="text"
-                    name="father.fname"
-                    value={formData.father.fname}
-                    onChange={handleChange}
-                    required
-                    placeholder="Father's First Name"
-                />
-                <label>Last Name</label>
-                <input
-                    type="text"
-                    name="father.lname"
-                    value={formData.father.lname}
-                    onChange={handleChange}
-                    placeholder="Father's Last Name"
-                />
+                <div>
+                    <label>State *</label>
+                    <select name="state" value={formData.state} onChange={handleChange} required>
+                        <option value="">Select State</option>
+                        {statesIndia.map((state) => (
+                            <option key={state} value={state}>{state}</option>
+                        ))}
+                    </select>
+                </div>
 
-                <label>Occupation *</label>
-                <select
-                    name="father.occupation"
-                    value={formData.father.occupation}
-                    onChange={(e) => handleOccupationChange(e, "father")}
-                    required
-                >
-                    <option value="">Select Occupation</option>
-                    {occupationOptions.map((occ) => (
-                        <option key={occ} value={occ}>
-                            {occ}
-                        </option>
-                    ))}
-                </select>
-
-                {formData.father.occupation === "Other" && (
+                <div>
+                    <label>Country *</label>
                     <input
-                        type="text"
-                        name="father.otherOccupation"
-                        value={formData.father.otherOccupation}
-                        onChange={(e) => handleOtherOccupationChange(e, "father")}
-                        placeholder="Specify Occupation"
+                        name="country"
+                        value={formData.country}
+                        onChange={handleChange}
                         required
+                        placeholder="Country"
                     />
-                )}
+                </div>
 
-                <label>Annual Income *</label>
-                <select
-                    name="father.income"
-                    value={formData.father.income}
-                    onChange={handleChange}
-                    required
-                >
-                    {incomeOptions.map(({ value, label }) => (
-                        <option key={value} value={value}>
-                            {label}
-                        </option>
-                    ))}
-                </select>
-
-                <label>Phone Number</label>
-                <input
-                    type="tel"
-                    name="father.phone"
-                    value={formData.father.phone}
-                    onChange={handleChange}
-                    placeholder="Father's Phone"
-                />
-
-                <label>Email</label>
-                <input
-                    type="email"
-                    name="father.email"
-                    value={formData.father.email}
-                    onChange={handleChange}
-                    placeholder="Father's Email"
-                />
-
-                {/* Mother's Details */}
-                <h3>Mother's Details</h3>
-                <label>First Name *</label>
-                <input
-                    type="text"
-                    name="mother.fname"
-                    value={formData.mother.fname}
-                    onChange={handleChange}
-                    required
-                    placeholder="Mother's First Name"
-                />
-                <label>Last Name</label>
-                <input
-                    type="text"
-                    name="mother.lname"
-                    value={formData.mother.lname}
-                    onChange={handleChange}
-                    placeholder="Mother's Last Name"
-                />
-
-                <label>Occupation *</label>
-                <select
-                    name="mother.occupation"
-                    value={formData.mother.occupation}
-                    onChange={(e) => handleOccupationChange(e, "mother")}
-                    required
-                >
-                    <option value="">Select Occupation</option>
-                    {occupationOptions.map((occ) => (
-                        <option key={occ} value={occ}>
-                            {occ}
-                        </option>
-                    ))}
-                </select>
-
-                {formData.mother.occupation === "Other" && (
+                <div>
+                    <label>Nationality *</label>
                     <input
-                        type="text"
-                        name="mother.otherOccupation"
-                        value={formData.mother.otherOccupation}
-                        onChange={(e) => handleOtherOccupationChange(e, "mother")}
-                        placeholder="Specify Occupation"
+                        name="nationality"
+                        value={formData.nationality}
+                        onChange={handleChange}
                         required
+                        placeholder="Nationality"
                     />
-                )}
+                </div>
 
-                <label>Annual Income *</label>
-                <select
-                    name="mother.income"
-                    value={formData.mother.income}
-                    onChange={handleChange}
-                    required
-                >
-                    {incomeOptions.map(({ value, label }) => (
-                        <option key={value} value={value}>
-                            {label}
-                        </option>
-                    ))}
-                </select>
+                <div>
+                    <label>Aadhaar Card Number *</label>
+                    <input
+                        name="adharcard"
+                        value={formData.adharcard}
+                        onChange={(e) => {
+                            const val = e.target.value;
+                            if (/^\d*$/.test(val) && val.length <= 12) {
+                                setFormData((prev) => ({ ...prev, adharcard: val }));
+                            }
+                        }}
+                        required
+                        placeholder="12 digit Aadhaar Number"
+                        maxLength={12}
+                    />
+                </div>
 
-                <label>Phone Number</label>
-                <input
-                    type="tel"
-                    name="mother.phone"
-                    value={formData.mother.phone}
-                    onChange={handleChange}
-                    placeholder="Mother's Phone"
-                />
+                <div>
+                    <label>Sports Quota *</label>
+                    <select name="sportsQuota" value={formData.sportsQuota === null ? "" : formData.sportsQuota} onChange={handleChange} required>
+                        <option value="">Select</option>
+                        {yesNoOptions.map(({ label, value }) => (
+                            <option key={label} value={value}>{label}</option>
+                        ))}
+                    </select>
+                </div>
 
-                <label>Email</label>
-                <input
-                    type="email"
-                    name="mother.email"
-                    value={formData.mother.email}
-                    onChange={handleChange}
-                    placeholder="Mother's Email"
-                />
+                <div>
+                    <label>Service Quota *</label>
+                    <select name="serviceQuota" value={formData.serviceQuota === null ? "" : formData.serviceQuota} onChange={handleChange} required>
+                        <option value="">Select</option>
+                        {yesNoOptions.map(({ label, value }) => (
+                            <option key={label} value={value}>{label}</option>
+                        ))}
+                    </select>
+                </div>
 
-                {/* Education Details */}
-                <h3>Education Details</h3>
+                <div>
+                    <label>Family Income *</label>
+                    <select name="familyincome" value={formData.familyincome} onChange={handleChange} required>
+                        {incomeRanges.map((income) => (
+                            <option key={income} value={income}>{income}</option>
+                        ))}
+                    </select>
+                </div>
 
-                <h4>10th Standard</h4>
-                <label>School Name</label>
-                <input
-                    type="text"
-                    name="education.tenth.schoolName"
-                    value={formData.education.tenth.schoolName}
-                    onChange={handleChange}
-                    placeholder="10th School Name"
-                />
-                <label>Board Name</label>
-                <input
-                    type="text"
-                    name="education.tenth.board"
-                    value={formData.education.tenth.board}
-                    onChange={handleChange}
-                    placeholder="10th Board"
-                />
-                <label>Percentage</label>
-                <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    max="100"
-                    name="education.tenth.percentage"
-                    value={formData.education.tenth.percentage}
-                    onChange={handleChange}
-                    placeholder="10th Percentage"
-                />
+                {/* Father details */}
+                <fieldset style={{ border: "1px solid #ccc", padding: 15, marginTop: 20 }}>
+                    <legend><b>Father's Details</b></legend>
 
-                <h4>12th Standard</h4>
-                <label>School Name</label>
-                <input
-                    type="text"
-                    name="education.twelfth.schoolName"
-                    value={formData.education.twelfth.schoolName}
-                    onChange={handleChange}
-                    placeholder="12th School Name"
-                />
-                <label>Board Name</label>
-                <input
-                    type="text"
-                    name="education.twelfth.boardName"
-                    value={formData.education.twelfth.boardName}
-                    onChange={handleChange}
-                    placeholder="12th Board"
-                />
-                <label>Percentage</label>
-                <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    max="100"
-                    name="education.twelfth.percentage"
-                    value={formData.education.twelfth.percentage}
-                    onChange={handleChange}
-                    placeholder="12th Percentage"
-                />
+                    <div>
+                        <label>First Name *</label>
+                        <input
+                            name="father.fname"
+                            value={formData.father.fname}
+                            onChange={handleChange}
+                            required
+                            placeholder="Father's First Name"
+                        />
+                    </div>
 
-                <h4>Undergraduate</h4>
-                <label>Status</label>
-                <select
-                    name="education.underGrad.status"
-                    value={formData.education.underGrad.status}
-                    onChange={handleChange}
-                >
-                    {educationStatusOptions.map(({ value, label }) => (
-                        <option key={value} value={value}>
-                            {label}
-                        </option>
-                    ))}
-                </select>
-                <label>College/University Name</label>
-                <input
-                    type="text"
-                    name="education.underGrad.schoolName"
-                    value={formData.education.underGrad.schoolName}
-                    onChange={handleChange}
-                    placeholder="Undergraduate Institution"
-                />
-                <label>Percentage/CGPA</label>
-                <input
-                    type="text"
-                    name="education.underGrad.percentage"
-                    value={formData.education.underGrad.percentage}
-                    onChange={handleChange}
-                    placeholder="Undergraduate Percentage/CGPA"
-                />
+                    <div>
+                        <label>Last Name *</label>
+                        <input
+                            name="father.lname"
+                            value={formData.father.lname}
+                            onChange={handleChange}
+                            required
+                            placeholder="Father's Last Name"
+                        />
+                    </div>
 
-                <h4>Postgraduate</h4>
-                <label>Status</label>
-                <select
-                    name="education.postGrad.status"
-                    value={formData.education.postGrad.status}
-                    onChange={handleChange}
-                >
-                    {educationStatusOptions.map(({ value, label }) => (
-                        <option key={value} value={value}>
-                            {label}
-                        </option>
-                    ))}
-                </select>
-                <label>College/University Name</label>
-                <input
-                    type="text"
-                    name="education.postGrad.schoolName"
-                    value={formData.education.postGrad.schoolName}
-                    onChange={handleChange}
-                    placeholder="Postgraduate Institution"
-                />
-                <label>Percentage/CGPA</label>
-                <input
-                    type="text"
-                    name="education.postGrad.percentage"
-                    value={formData.education.postGrad.percentage}
-                    onChange={handleChange}
-                    placeholder="Postgraduate Percentage/CGPA"
-                />
+                    <div>
+                        <label>Occupation *</label>
+                        <select
+                            name="father.occupation"
+                            value={formData.father.occupation}
+                            onChange={(e) => handleOccupationChange("father", e)}
+                            required
+                        >
+                            <option value="">Select Occupation</option>
+                            {occupationsList.map((occ) => (
+                                <option key={occ} value={occ}>{occ}</option>
+                            ))}
+                        </select>
+                        {formData.father.occupation === "Other" && (
+                            <input
+                                name="father.occupationOther"
+                                value={formData.father.occupationOther}
+                                onChange={handleChange}
+                                placeholder="Please specify"
+                                required
+                            />
+                        )}
+                    </div>
 
-                <button type="submit">Submit</button>
+                    <div>
+                        <label>Income *</label>
+                        <select
+                            name="father.income"
+                            value={formData.father.income}
+                            onChange={handleChange}
+                            required
+                        >
+                            {incomeRanges.map((income) => (
+                                <option key={income} value={income}>{income}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Phone *</label>
+                        <input
+                            name="father.phone"
+                            value={formData.father.phone}
+                            onChange={handleChange}
+                            required
+                            placeholder="Father's Phone"
+                            maxLength={10}
+                        />
+                    </div>
+
+                    <div>
+                        <label>Email</label>
+                        <input
+                            type="email"
+                            name="father.email"
+                            value={formData.father.email}
+                            onChange={handleChange}
+                            placeholder="Father's Email"
+                        />
+                    </div>
+                </fieldset>
+
+                {/* Mother details */}
+                <fieldset style={{ border: "1px solid #ccc", padding: 15, marginTop: 20 }}>
+                    <legend><b>Mother's Details</b></legend>
+
+                    <div>
+                        <label>First Name *</label>
+                        <input
+                            name="mother.fname"
+                            value={formData.mother.fname}
+                            onChange={handleChange}
+                            required
+                            placeholder="Mother's First Name"
+                        />
+                    </div>
+
+                    <div>
+                        <label>Last Name *</label>
+                        <input
+                            name="mother.lname"
+                            value={formData.mother.lname}
+                            onChange={handleChange}
+                            required
+                            placeholder="Mother's Last Name"
+                        />
+                    </div>
+
+                    <div>
+                        <label>Occupation *</label>
+                        <select
+                            name="mother.occupation"
+                            value={formData.mother.occupation}
+                            onChange={(e) => handleOccupationChange("mother", e)}
+                            required
+                        >
+                            <option value="">Select Occupation</option>
+                            {occupationsList.map((occ) => (
+                                <option key={occ} value={occ}>{occ}</option>
+                            ))}
+                        </select>
+                        {formData.mother.occupation === "Other" && (
+                            <input
+                                name="mother.occupationOther"
+                                value={formData.mother.occupationOther}
+                                onChange={handleChange}
+                                placeholder="Please specify"
+                                required
+                            />
+                        )}
+                    </div>
+
+                    <div>
+                        <label>Income *</label>
+                        <select
+                            name="mother.income"
+                            value={formData.mother.income}
+                            onChange={handleChange}
+                            required
+                        >
+                            {incomeRanges.map((income) => (
+                                <option key={income} value={income}>{income}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Phone *</label>
+                        <input
+                            name="mother.phone"
+                            value={formData.mother.phone}
+                            onChange={handleChange}
+                            required
+                            placeholder="Mother's Phone"
+                            maxLength={10}
+                        />
+                    </div>
+
+                    <div>
+                        <label>Email</label>
+                        <input
+                            type="email"
+                            name="mother.email"
+                            value={formData.mother.email}
+                            onChange={handleChange}
+                            placeholder="Mother's Email"
+                        />
+                    </div>
+                </fieldset>
+
+                {/* Education */}
+                <fieldset style={{ border: "1px solid #ccc", padding: 15, marginTop: 20 }}>
+                    <legend><b>Education Details</b></legend>
+
+                    <h4>10th</h4>
+                    <div>
+                        <label>School Name *</label>
+                        <input
+                            name="education.tenth.schoolName"
+                            value={formData.education.tenth.schoolName}
+                            onChange={handleChange}
+                            required
+                            placeholder="10th School Name"
+                        />
+                    </div>
+
+                    <div>
+                        <label>Board *</label>
+                        <input
+                            name="education.tenth.board"
+                            value={formData.education.tenth.board}
+                            onChange={handleChange}
+                            required
+                            placeholder="10th Board"
+                        />
+                    </div>
+
+                    <div>
+                        <label>Percentage *</label>
+                        <input
+                            type="number"
+                            name="education.tenth.percentage"
+                            value={formData.education.tenth.percentage}
+                            onChange={handleChange}
+                            required
+                            placeholder="10th Percentage"
+                            min={0}
+                            max={100}
+                            step={0.01}
+                        />
+                    </div>
+
+                    <h4>12th</h4>
+                    <div>
+                        <label>School Name *</label>
+                        <input
+                            name="education.twelfth.schoolName"
+                            value={formData.education.twelfth.schoolName}
+                            onChange={handleChange}
+                            required
+                            placeholder="12th School Name"
+                        />
+                    </div>
+
+                    <div>
+                        <label>Board *</label>
+                        <input
+                            name="education.twelfth.boardName"
+                            value={formData.education.twelfth.boardName}
+                            onChange={handleChange}
+                            required
+                            placeholder="12th Board"
+                        />
+                    </div>
+
+                    <div>
+                        <label>Percentage *</label>
+                        <input
+                            type="number"
+                            name="education.twelfth.percentage"
+                            value={formData.education.twelfth.percentage}
+                            onChange={handleChange}
+                            required
+                            placeholder="12th Percentage"
+                            min={0}
+                            max={100}
+                            step={0.01}
+                        />
+                    </div>
+
+                    <h4>Under Graduation</h4>
+                    <div>
+                        <label>Status *</label>
+                        <select
+                            name="education.underGrad.status"
+                            value={formData.education.underGrad.status}
+                            onChange={handleChange}
+                            required
+                        >
+                            {ugPgStatusOptions.map((opt) => (
+                                <option key={opt} value={opt}>{opt}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>School Name</label>
+                        <input
+                            name="education.underGrad.schoolName"
+                            value={formData.education.underGrad.schoolName}
+                            onChange={handleChange}
+                            placeholder="Undergrad College Name"
+                            disabled={formData.education.underGrad.status === "Not Done"}
+                        />
+                    </div>
+
+                    <div>
+                        <label>Percentage</label>
+                        <input
+                            type="number"
+                            name="education.underGrad.percentage"
+                            value={formData.education.underGrad.percentage}
+                            onChange={handleChange}
+                            placeholder="Undergrad Percentage"
+                            disabled={formData.education.underGrad.status === "Not Done"}
+                            min={0}
+                            max={100}
+                            step={0.01}
+                        />
+                    </div>
+
+                    <h4>Post Graduation</h4>
+                    <div>
+                        <label>Status *</label>
+                        <select
+                            name="education.postGrad.status"
+                            value={formData.education.postGrad.status}
+                            onChange={handleChange}
+                            required
+                        >
+                            {ugPgStatusOptions.map((opt) => (
+                                <option key={opt} value={opt}>{opt}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>School Name</label>
+                        <input
+                            name="education.postGrad.schoolName"
+                            value={formData.education.postGrad.schoolName}
+                            onChange={handleChange}
+                            placeholder="Postgrad College Name"
+                            disabled={formData.education.postGrad.status === "Not Done"}
+                        />
+                    </div>
+
+                    <div>
+                        <label>Percentage</label>
+                        <input
+                            type="number"
+                            name="education.postGrad.percentage"
+                            value={formData.education.postGrad.percentage}
+                            onChange={handleChange}
+                            placeholder="Postgrad Percentage"
+                            disabled={formData.education.postGrad.status === "Not Done"}
+                            min={0}
+                            max={100}
+                            step={0.01}
+                        />
+                    </div>
+                </fieldset>
+
+                <button type="submit" style={{ marginTop: 30, padding: "10px 30px", backgroundColor: "#4a148c", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer" }}>
+                    Submit
+                </button>
             </form>
             <Footer />
         </>
