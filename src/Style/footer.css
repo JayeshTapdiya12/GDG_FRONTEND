@@ -1,0 +1,13 @@
+footer {
+  background: #af0cfa;
+  /* background: -webkit-linear-gradient(to right, #24a3d9, #37a3c7, #66c8f2); */
+  /* background: linear-gradient(to right, #2c5364, #203a43, #0f2027); */
+}
+.sticky-footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(64, 218, 226, 0.489);
+  text-align: center;
+  padding: 1rem 0;
+}
