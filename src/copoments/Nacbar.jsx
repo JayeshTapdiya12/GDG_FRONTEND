@@ -22,6 +22,8 @@ const Nacbar = () => {
                         <li><Link to="/contact">Contact</Link></li>
                         <li><Link to="/profile">Profile</Link></li>
                         <li><Link to="/form">Student Form </Link></li>
+                        <li><Link to="/scholarship">Scholarship </Link></li>
+
                         <li><button className="logout-button" onClick={handleLogut}>Logout</button></li>
                     </ul>
                 </div>

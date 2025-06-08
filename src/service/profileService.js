@@ -22,3 +22,11 @@ export const createProfile = async (data) => {
     const res = await axios.post(`${baseUrl}`, hel, headers);
     return res;
 }
+
+export const ScholarshipData = async () => {
+    const url = "http://localhost:4000/api/v1/api/scholarships"
+    console.log("hello api")
+    const data = await axios.post(url, null, headers);
+    console.log(data)
+    return data;
+}
