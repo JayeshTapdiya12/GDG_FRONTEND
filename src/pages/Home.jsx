@@ -5,6 +5,7 @@ import Footer from '../copoments/Footer'
 import About from './About'
 import Nacbar from '../copoments/Nacbar'
 import HomeInfo from './HomeInfo'
+import { NavLink } from 'react-router-dom'
 const Home = () => {
     return (
         <>
@@ -15,7 +16,7 @@ const Home = () => {
                 <p className="hero-description">
                     Breaking financial barriers to education and empowering dreams.
                 </p>
-                <button className="hero-button">Get Started</button>
+                <NavLink to={'/form'}><button className="hero-button" >Get Started</button></NavLink>
                 <img
                     src="https://images.unsplash.com/photo-1596495577886-d920f1a8f6f2?auto=format&fit=crop&w=800&q=80"
                     alt="Students studying"
