@@ -1,11 +1,12 @@
 import React from 'react'
 
-import Header from '../copoments/Header'
+// import Header from '../copoments/Header'
 import Footer from '../copoments/Footer'
-import About from './About'
+// import About from './About'
 import Nacbar from '../copoments/Nacbar'
 import HomeInfo from './HomeInfo'
 import { NavLink } from 'react-router-dom'
+import img from '../assets/image.png'
 const Home = () => {
     return (
         <>
@@ -18,7 +19,7 @@ const Home = () => {
                 </p>
                 <NavLink to={'/form'}><button className="hero-button" >Get Started</button></NavLink>
                 <img
-                    src="https://images.unsplash.com/photo-1596495577886-d920f1a8f6f2?auto=format&fit=crop&w=800&q=80"
+                    src={img}
                     alt="Students studying"
                     className="hero-image"
                 />

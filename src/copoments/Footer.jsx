@@ -3,8 +3,8 @@ import '../Style/footer.css'
 const Footer = () => {
     return (
         <>
-            <footer className="footer">
-                <p>© 2025 EduAid | Google India Hackathon</p>
+            <footer className="footer" >
+                <p style={{ color: "white" }}   >© 2025 EduAid | Google India Hackathon</p>
             </footer>
         </>
     )

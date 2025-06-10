@@ -21,6 +21,7 @@ const Nacbar = () => {
                         <li><Link to="/about">About</Link></li>
                         <li><Link to="/contact">Contact</Link></li>
                         <li><Link to="/profile">Profile</Link></li>
+                        <li><Link to={'/visa'}>Visa Info.</Link></li>
                         <li><Link to="/form">Student Form </Link></li>
                         <li><Link to="/scholarship">Scholarship </Link></li>
 

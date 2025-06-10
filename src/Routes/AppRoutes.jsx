@@ -9,6 +9,7 @@ import Contact from '../pages/Contact'
 import Form from '../copoments/Form'
 import Profile from '../pages/Profile';
 import Scholarship from '../pages/Scholarship';
+import LawAlert from '../pages/LawAlert';
 const AppRouter = () => {
     return (
         <>
@@ -25,6 +26,7 @@ const AppRouter = () => {
                     <Route path='/form' element={<ProtectedRoute><Form /></ProtectedRoute>} />
                     <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                     <Route path='/scholarship' element={<ProtectedRoute><Scholarship /></ProtectedRoute>} />
+                    <Route path='/visa' element={<ProtectedRoute><LawAlert /></ProtectedRoute>} />
                 </Routes>
             </BrowserRouter>
         </>
