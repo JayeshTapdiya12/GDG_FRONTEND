@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ScholarshipData } from '../service/profileService'
 import Nacbar from '../copoments/Nacbar';
 import Footer from '../copoments/Footer';
-import Header from '../copoments/Header';
+import '../Style/Scholarship.css'
 
 // import ScholarshipResult from './ScholarshipResult';
 

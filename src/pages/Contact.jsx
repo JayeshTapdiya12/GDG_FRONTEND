@@ -14,19 +14,23 @@ const Contact = () => {
                     <div className="info-box" data-aos="fade-right">
                         <FaMapMarkerAlt className="icon" />
                         <h3>Our Location</h3>
-                        <p>Indore<br /> India</p>
+                        <p>Indore,<br /> India</p>
                     </div>
 
                     <div className="info-box" data-aos="zoom-in">
                         <FaPhoneAlt className="icon" />
                         <h3>Phone</h3>
-                        <p>+91 7456981230</p>
+                        <p>+91 7869148854
+                            <br />
+                            +91 7013826349</p>
                     </div>
 
                     <div className="info-box" data-aos="fade-left">
                         <FaEnvelope className="icon" />
                         <h3>Email</h3>
-                        <p>support@edusupport.in</p>
+                        <p>jayesh121220@gmail.com
+                            <br />
+                            riakabra1@gmail.com</p>
                     </div>
                 </div>
 
@@ -36,7 +40,7 @@ const Contact = () => {
                         <input type="text" placeholder="Your Name" required />
                         <input type="email" placeholder="Your Email" required />
                         <textarea rows="5" placeholder="Your Message" required></textarea>
-                        <button type="submit">Submit</button>
+                        <button type="submit" >Submit</button>
                     </form>
                 </div>
             </div>
