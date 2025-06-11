@@ -10,6 +10,7 @@ import Form from '../copoments/Form'
 import Profile from '../pages/Profile';
 import Scholarship from '../pages/Scholarship';
 import LawAlert from '../pages/LawAlert';
+import ScholarshipStatusChecker from '../pages/ScholarshipStatusChecker';
 const AppRouter = () => {
     return (
         <>
@@ -27,6 +28,7 @@ const AppRouter = () => {
                     <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                     <Route path='/scholarship' element={<ProtectedRoute><Scholarship /></ProtectedRoute>} />
                     <Route path='/visa' element={<ProtectedRoute><LawAlert /></ProtectedRoute>} />
+                    <Route path='/status' element={<ProtectedRoute><ScholarshipStatusChecker />  </ProtectedRoute>} />
                 </Routes>
             </BrowserRouter>
         </>
