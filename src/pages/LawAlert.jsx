@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Footer from "../copoments/Footer";
 import Nacbar from "../copoments/Nacbar";
-
+import ReactMarkdown from "react-markdown";
 const LawAlert = () => {
   const [country, setCountry] = useState("");
   const [update, setUpdate] = useState("");
@@ -59,7 +59,7 @@ const LawAlert = () => {
             }}
           >
             <strong>Latest Update for {country.trim().toUpperCase()}:</strong>
-            <p>{update}</p>
+            <ReactMarkdown>{update}</ReactMarkdown>
             <button
               onClick={() => setShow(false)}
               style={{ marginTop: "0.5rem" }}
