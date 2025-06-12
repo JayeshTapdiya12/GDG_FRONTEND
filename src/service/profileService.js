@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const baseUrl = 'http://localhost:4000/api/v1/profile';
-const baseUrl = 'https://gdg-backend-4-pvet.onrender.com/api/v1/profile';
+const baseUrl = 'http://localhost:4000/api/v1/profile';
 
 
 
@@ -26,7 +26,7 @@ export const createProfile = async (data) => {
 }
 
 export const ScholarshipData = async () => {
-    const url = "https://gdg-backend-4-pvet.onrender.com/api/v1/api/scholarships"
+    const url = "http://localhost:4000/api/v1//api/v1/api/scholarships"
     console.log("hello api")
     console.log(headers)
     const data = await axios.post(url, null, headers);

@@ -14,7 +14,7 @@ const LawAlert = () => {
     setLoading(true);
     setShow(false);
     axios
-      .get(`https://gdg-backend-4-pvet.onrender.com/api/v1/visa-updates/${country.trim()}`)
+      .get(`http://localhost:4000/api/v1//visa-updates/${country.trim()}`)
       .then((res) => {
         setUpdate(res.data.update);
         setShow(true);

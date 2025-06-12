@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const baseUrl = 'http://localhost:4000/api/v1/profile';
-const baseUrl = 'https://gdg-backend-4-pvet.onrender.com/api/v1/status';
+const baseUrl = 'http://localhost:4000/api/v1/status';
 
 
 
