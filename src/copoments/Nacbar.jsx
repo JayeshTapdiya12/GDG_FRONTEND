@@ -14,7 +14,7 @@ const Nacbar = () => {
         <div>
             <nav className="navbar">
                 <div className="navbar-container">
-                    <div className="logo">EduSupport</div>
+                    <div className="logo">EduBridge</div>
 
                     <ul className="nav-links">
                         <li><Link to="/home">Home</Link></li>

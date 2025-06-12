@@ -4,7 +4,7 @@ const Footer = () => {
     return (
         <>
             <footer className="footer" >
-                <p style={{ color: "white" }}   >© 2025 EduAid | Google India Hackathon</p>
+                <p style={{ color: "white" }}   >© 2025 EduBridge | Google India Hackathon</p>
             </footer>
         </>
     )
