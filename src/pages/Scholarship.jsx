@@ -3,6 +3,7 @@ import { ScholarshipData } from '../service/profileService'
 import Nacbar from '../copoments/Nacbar';
 import Footer from '../copoments/Footer';
 import '../Style/Scholarship.css'
+import ReactMarkdown from 'react-markdown';
 
 // import ScholarshipResult from './ScholarshipResult';
 
@@ -47,7 +48,9 @@ const Scholarship = () => {
                 <div className="mb-8">
                     <h2 className="text-lg font-semibold mb-2 text-blue-900">📘 Recommendation Summary:</h2>
                     <div className="bg-blue-50 p-4 rounded-md">
-                        {formatText(data.result)}
+                        {/* {formatText(data.result)} */}
+                        <ReactMarkdown>{data.result}</ReactMarkdown>
+
                     </div>
                 </div>
 
