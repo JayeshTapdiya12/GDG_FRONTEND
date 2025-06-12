@@ -26,7 +26,7 @@ export const createProfile = async (data) => {
 }
 
 export const ScholarshipData = async () => {
-    const url = "http://localhost:4000/api/v1//api/v1/api/scholarships"
+    const url = "http://localhost:4000/api/v1/api/scholarships"
     console.log("hello api")
     console.log(headers)
     const data = await axios.post(url, null, headers);
